@@ -11,4 +11,10 @@
         <app />
     </div>
 </body>
+<style>
+    body, h1, p{
+        margin: 0;
+        padding: 0;
+    }
+</style>
 </html>
