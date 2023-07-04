@@ -72,15 +72,10 @@ export default {
             axios
                 .delete(`/api/accessories/${this.deleteId}`)
                 .then((response) => {
-                    axios.get("api/accessories").then((response) => {
-                        this.deleteFlg = false;
-                        this.accessories = response.data.data.map((e) => {
-                            e.color = Math.floor(
-                                Math.random() * 16777215
-                            ).toString(16);
-                            return e;
-                        });
+                    this.accessories = this.accessories.filter((e) => {
+                        return e.id !== this.deleteId;
                     });
+                    this.deleteFlg = false;
                 });
         },
     },
