@@ -23,7 +23,7 @@ const routes = [
     },
     {
         path: "/accessories/create",
-        name: "AcccessoryCreate",
+        name: "AccessoryCreate",
         component: AcccessoryCreate,
     },
     {

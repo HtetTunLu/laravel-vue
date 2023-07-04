@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\AccessoryResource;
 use App\Models\Accessory;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class AccessoriesController extends BaseController
 {
@@ -17,9 +18,16 @@ class AccessoriesController extends BaseController
      */
     public function index()
     {
-        $posts = Accessory::all();
-
-        return $this->sendResponse(AccessoryResource::collection($posts), 'Post retrieved successfully.');
+        $accessories = Accessory::all();
+        foreach ($accessories as $accessory) {
+            $path = public_path() . "/upload/" . $accessory['image'];
+            if (!File::exists($path)) {
+                return response()->json(['message' => 'Image not found.'], 404);
+            }
+            $file = (string) File::get($path);
+            $accessory->image = base64_encode($file);
+        }
+        return $this->sendResponse(AccessoryResource::collection($accessories), 'Post retrieved successfully.');
     }
 
     /**

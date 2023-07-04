@@ -176,6 +176,7 @@ export default {
     border-radius: 10px;
     color: rgb(254, 140, 140);
     font-size: 14px;
+    opacity: 0.7;
 }
 .name:focus {
     outline: none;
