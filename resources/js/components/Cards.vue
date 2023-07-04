@@ -22,11 +22,11 @@
                     </div>
 
                     <div class="ag-courses-item_date-box">
-                        <span @click="onShow">Show</span>
+                        <span @click="$emit('on-show', accessory.id)">Show</span>
                         <span class="or">|</span
-                        ><span @click="onEdit">Edit</span>
+                        ><span @click="$emit('on-edit', accessory.id)">Edit</span>
                         <span class="or">|</span>
-                        <span @click="onDelete">Delete</span>
+                        <span @click="$emit('on-delete', accessory.id)">Delete</span>
                     </div>
                 </div>
             </div>
@@ -38,22 +38,11 @@
 export default {
     name: "Cards",
     props: ["accessories"],
-    methods: {
-        onShow() {
-            console.log("show");
-        },
-        onEdit() {
-            console.log("Edit");
-        },
-        onDelete() {
-            console.log("delete");
-        },
-    },
 };
 </script>
 
 <style scoped>
-\.ag-format-container {
+.ag-format-container {
     width: 1142px;
     margin: 0 auto;
 }
@@ -123,7 +112,6 @@ body {
     margin-top: 20px;
     font-size: 16px;
     color: red;
-    font-weight: bold;
     z-index: 2;
     position: relative;
     cursor: pointer;

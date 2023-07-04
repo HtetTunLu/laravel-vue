@@ -1,4 +1,5 @@
 <template>
+    <confirm :isDelete="deleteFlg" @no="cancelModal" @yes="confirmDelete" />
     <div class="main">
         <div class="sub-main">
             <div class="container">
@@ -8,7 +9,12 @@
                 <button class="btn" @click="onCreate">New</button>
             </div>
             <div class="lists">
-                <cards :accessories="this.accessories" />
+                <cards
+                    :accessories="this.accessories"
+                    @on-show="onShow"
+                    @on-edit="onEdit"
+                    @on-delete="onDelete"
+                />
             </div>
         </div>
     </div>
@@ -16,15 +22,19 @@
 <script>
 import axios from "axios";
 import Cards from "../../components/Cards.vue";
+import Confirm from "../../components/Confirm.vue";
 
 export default {
     name: "Dashboard",
     components: {
         Cards,
+        Confirm,
     },
     data: () => {
         return {
             accessories: [],
+            deleteFlg: false,
+            deleteId: -1,
         };
     },
     created() {
@@ -44,6 +54,35 @@ export default {
         onCreate() {
             this.$router.push({ name: "AccessoryCreate" });
         },
+        onShow(id) {
+            this.$router.push({ path: `/accessories/${id}/show` });
+        },
+        onEdit(id) {
+            this.$router.push({ path: `/accessories/${id}/edit` });
+        },
+        onDelete(id) {
+            this.deleteFlg = true;
+            this.deleteId = id;
+        },
+        cancelModal() {
+            this.deleteFlg = false;
+            this.deleteId = -1;
+        },
+        confirmDelete() {
+            axios
+                .delete(`/api/accessories/${this.deleteId}`)
+                .then((response) => {
+                    axios.get("api/accessories").then((response) => {
+                        this.deleteFlg = false;
+                        this.accessories = response.data.data.map((e) => {
+                            e.color = Math.floor(
+                                Math.random() * 16777215
+                            ).toString(16);
+                            return e;
+                        });
+                    });
+                });
+        },
     },
 };
 </script>
@@ -61,7 +100,7 @@ export default {
     text-align: center;
 }
 .sub-main {
-    width: 85%;
+    width: 75%;
     margin: 0 auto;
     padding-top: 70px;
 }
@@ -99,7 +138,7 @@ h1 {
     display: inline-block;
     font-size: 25px;
     font-weight: bold;
-    background: -webkit-linear-gradient(#58b2ff, #ff9c9c);
+    background: -webkit-linear-gradient(#9dbba5, #ff9c9c);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

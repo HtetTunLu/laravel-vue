@@ -67,13 +67,19 @@ class AccessoriesController extends BaseController
      */
     public function show($id)
     {
-        $post = Accessory::find($id);
+        $accessory = Accessory::find($id);
 
-        if (is_null($post)) {
-            return $this->sendError('Post not found.');
+        if (is_null($accessory)) {
+            return $this->sendError('Accessory not found.');
         }
+        $path = public_path() . "/upload/" . $accessory['image'];
+        if (!File::exists($path)) {
+            return response()->json(['message' => 'Image not found.'], 404);
+        }
+        $file = (string) File::get($path);
+        $accessory->image = base64_encode($file);
 
-        return $this->sendResponse(new AccessoryResource($post), 'Post retrieved successfully.');
+        return $this->sendResponse(new AccessoryResource($accessory), 'Post retrieved successfully.');
     }
 
     /**
@@ -83,24 +89,28 @@ class AccessoriesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Accessory $post)
+    public function update(Request $request, Accessory $accessory)
     {
         $input = $request->all();
-
         $validator = Validator::make($input, [
-            'title' => 'required',
-            'body' => 'required'
+            'name' => 'required',
+            'image' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Not valid inputs', $validator->errors());
         }
+        if (!is_string($request->image)) {
+            $upload_path = public_path('upload');
+            $generated_new_name = time() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move($upload_path, $generated_new_name);
+            $accessory->image = $generated_new_name;
+        }
+        $accessory->name = $input['name'];
 
-        $post->title = $input['title'];
-        $post->body = $input['body'];
-        $post->save();
+        $accessory->save();
 
-        return $this->sendResponse(new AccessoryResource($post), 'Post updated successfully.');
+        return $this->sendResponse(new AccessoryResource($accessory), 'Accessory updated successfully.');
     }
 
     /**
@@ -109,10 +119,10 @@ class AccessoriesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Accessory $post)
+    public function destroy(Accessory $accessory)
     {
-        $post->delete();
+        $accessory->delete();
 
-        return $this->sendResponse([], 'Post deleted successfully.');
+        return $this->sendResponse([], 'Accessory deleted successfully.');
     }
 }

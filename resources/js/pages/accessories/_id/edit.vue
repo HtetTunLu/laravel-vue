@@ -2,7 +2,7 @@
     <div class="main">
         <div class="sub-main">
             <div class="container">
-                <p class="typed">Accessory Create Form</p>
+                <p class="typed">Accessory Edit Form</p>
             </div>
             <div class="form">
                 <div class="error-msg">
@@ -26,13 +26,18 @@
                     />
                     <form action="">
                         <div class="selected-img">
-                            <img src="" alt="img" class="img" id="avatar" />
+                            <img
+                                :src="this.image"
+                                alt="img"
+                                class="img"
+                                id="avatar"
+                            />
                             <div class="clear" @click="clearImg">clear</div>
                         </div>
                     </form>
                 </div>
                 <div class="form-control-btn">
-                    <button type="submit" class="btn" @click="save">
+                    <button type="submit" class="btn" @click="update">
                         Submit
                     </button>
                 </div>
@@ -43,13 +48,30 @@
 
 <script>
 export default {
-    name: "AccessoryCreate",
+    name: "AccessoryEdit",
     data: () => {
         return {
             name: "",
             image: "",
             errorMsg: "",
         };
+    },
+    beforeCreate() {
+        axios.defaults.headers = {
+            Accept: "application/json",
+            Authorization: `Bearer ${this.$store.state.token}`,
+        };
+        axios
+            .get(
+                `/api/accessories/${this.$router.currentRoute._value.params.id}`
+            )
+            .then((response) => {
+                const selected =
+                    document.getElementsByClassName("selected-img")[0];
+                selected.style.display = "block";
+                this.name = response.data.data.name;
+                this.image = `data:image/png;base64,${response.data.data.image}`;
+            })
     },
     methods: {
         uploadImg(event) {
@@ -64,17 +86,22 @@ export default {
             };
             reader.readAsDataURL(event.target.files[0]);
         },
-        save() {
+        async update() {
             const accessToken = this.$store.state.token;
             axios.defaults.headers = {
                 Accept: "application/json",
                 Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/x-www-form-urlencoded",
             };
             const formData = new FormData();
             formData.append("name", this.name);
             formData.append("image", this.image);
+            formData.append('_method', 'PATCH');
             axios
-                .post("/api/accessories", formData)
+                .post(
+                    `/api/accessories/${this.$router.currentRoute._value.params.id}`,
+                    formData
+                )
                 .then((response) => {
                     this.$router.push({ name: "Accessories" });
                 })
