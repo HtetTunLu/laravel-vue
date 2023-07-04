@@ -1,8 +1,5 @@
 <template>
     <div class="main">
-        <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link> |
-        <router-link :to="{ name: 'Test' }">Test</router-link> |
-        <router-link :to="{ name: 'Accessories' }">Accessories</router-link>
         <h1>This is Dashboard Page</h1>
     </div>
 </template>

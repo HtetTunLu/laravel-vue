@@ -33,14 +33,19 @@ class AccessoriesController extends BaseController
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'title' => 'required',
-            'body' => 'required'
+            'name' => 'required | unique:accessories',
+            'image' => 'required'
         ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+        if ($validator->fails()) {
+            return $this->sendError('Not valid inputs', $validator->errors());
         }
 
+        $upload_path = public_path('upload');
+        $generated_new_name = time() . '.' . $request->image->getClientOriginalExtension();
+        $request->image->move($upload_path, $generated_new_name);
+
+        $input['image'] = $generated_new_name;
         $post = Accessory::create($input);
 
         return $this->sendResponse(new AccessoryResource($post), 'Post created successfully.');
@@ -79,7 +84,7 @@ class AccessoriesController extends BaseController
             'body' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
 

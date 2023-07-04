@@ -189,7 +189,7 @@ export default {
     white-space: nowrap;
     width: 0;
     animation: typing 2.5s steps(30, end) forwards, blinking 0.2s infinite;
-    animation-iteration-count: 100;
+    animation-iteration-count: infinite;
 }
 
 @keyframes typing {

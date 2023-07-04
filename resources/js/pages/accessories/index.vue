@@ -1,8 +1,6 @@
 <template>
     <div class="main">
-        <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link> |
-        <router-link :to="{ name: 'Test' }">Test</router-link>
-        <h1>This is Accessories Page</h1>
+        <h1>This is Accessories Page 2</h1>
     </div>
 </template>
 <script>
