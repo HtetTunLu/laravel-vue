@@ -65,7 +65,6 @@ export default {
             const formData = new FormData();
             formData.append("name", this.name);
             formData.append("floor", this.floor);
-            console.log(this.name, this.floor)
             axios
                 .post("/api/teams", formData)
                 .then((response) => {

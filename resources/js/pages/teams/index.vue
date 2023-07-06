@@ -61,7 +61,6 @@ export default {
             this.$router.push({ path: `/teams/${id}/show` });
         },
         onEdit(id) {
-            console.log(id);
             this.$router.push({ path: `/teams/${id}/edit` });
         },
         onDelete(id) {
