@@ -22,11 +22,17 @@
                     </div>
 
                     <div class="ag-courses-item_date-box">
-                        <span @click="$emit('on-show', accessory.id)">Show</span>
+                        <span @click="$emit('on-show', accessory.id)"
+                            >Show</span
+                        >
                         <span class="or">|</span
-                        ><span @click="$emit('on-edit', accessory.id)">Edit</span>
+                        ><span @click="$emit('on-edit', accessory.id)"
+                            >Edit</span
+                        >
                         <span class="or">|</span>
-                        <span @click="$emit('on-delete', accessory.id)">Delete</span>
+                        <span @click="$emit('on-delete', accessory.id)"
+                            >Delete</span
+                        >
                     </div>
                 </div>
             </div>
@@ -147,6 +153,7 @@ body {
     height: 150px;
     margin: 0 auto;
     border-radius: 50%;
+    margin-top: 15px;
 }
 
 .or {

@@ -16,11 +16,10 @@ export default {
     props: ["isDelete"],
     methods: {
         no() {
-            this.$emit('no')
+            this.$emit("no");
             document.getElementById("myModal").style.display = "none";
         },
     },
-
 };
 </script>
 
@@ -40,21 +39,22 @@ export default {
 /* Modal Content */
 .modal-content {
     text-align: center;
-    background: rgb(242, 147, 232);
+    background: rgb(157, 187, 165);
     background: linear-gradient(
         280deg,
-        rgba(242, 147, 232, 1) 0%,
-        rgba(251, 209, 237, 1) 45%,
-        rgba(255, 122, 218, 1) 100%
+        rgba(157, 187, 165, 1) 0%,
+        rgba(214, 251, 206, 1) 45%,
+        rgba(221, 226, 219, 1) 100%
     );
     margin: auto;
     padding: 20px;
-    border: 3px solid #888;
+    border: 1px solid #888;
     width: 20%;
     border-radius: 20px;
 }
 .modal-content p {
     font-size: 20px;
+    margin: 20px 0;
     color: brown;
 }
 
@@ -86,10 +86,11 @@ export default {
     cursor: pointer;
     margin-top: 40px;
     margin-left: 10px;
-    height: 23px;
+    margin-bottom: 20px;
     color: white;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
+    padding: 7px;
 }
 .yes {
     margin-left: 0;

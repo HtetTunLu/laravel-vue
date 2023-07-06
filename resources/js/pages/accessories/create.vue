@@ -1,5 +1,7 @@
 <template>
     <div class="main">
+        <Nav />
+        <back />
         <div class="sub-main">
             <div class="container">
                 <p class="typed">Accessory Create Form</p>
@@ -42,8 +44,15 @@
 </template>
 
 <script>
+import Nav from "../../components/Nav.vue";
+import Back from "../../components/Back.vue";
+
 export default {
     name: "AccessoryCreate",
+    components: {
+        Nav,
+        Back,
+    },
     data: () => {
         return {
             name: "",
@@ -104,6 +113,7 @@ export default {
         rgba(221, 231, 231, 1) 51%,
         rgba(253, 255, 244, 1) 100%
     );
+    margin-left: 6%;
 }
 .sub-main {
     width: 50%;

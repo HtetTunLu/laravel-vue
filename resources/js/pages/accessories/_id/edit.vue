@@ -1,5 +1,7 @@
 <template>
     <div class="main">
+        <Nav />
+        <back />
         <div class="sub-main">
             <div class="container">
                 <p class="typed">Accessory Edit Form</p>
@@ -47,8 +49,15 @@
 </template>
 
 <script>
+import Nav from "../../../components/Nav.vue";
+import Back from "../../../components/Back.vue";
+
 export default {
     name: "AccessoryEdit",
+    components: {
+        Nav,
+        Back,
+    },
     data: () => {
         return {
             name: "",
@@ -71,7 +80,7 @@ export default {
                 selected.style.display = "block";
                 this.name = response.data.data.name;
                 this.image = `data:image/png;base64,${response.data.data.image}`;
-            })
+            });
     },
     methods: {
         uploadImg(event) {
@@ -96,7 +105,7 @@ export default {
             const formData = new FormData();
             formData.append("name", this.name);
             formData.append("image", this.image);
-            formData.append('_method', 'PATCH');
+            formData.append("_method", "PATCH");
             axios
                 .post(
                     `/api/accessories/${this.$router.currentRoute._value.params.id}`,
@@ -131,6 +140,7 @@ export default {
         rgba(221, 231, 231, 1) 51%,
         rgba(253, 255, 244, 1) 100%
     );
+    margin-left: 6%;
 }
 .sub-main {
     width: 50%;

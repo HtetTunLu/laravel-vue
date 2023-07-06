@@ -6,6 +6,7 @@ import AcccessoryEdit from "./pages/accessories/_id/edit.vue";
 import AcccessoryShow from "./pages/accessories/_id/show.vue";
 import Test from "./pages/Test.vue";
 import Login from "./pages/Login.vue";
+import store from "./store";
 
 const routes = [
     {
@@ -48,6 +49,18 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+});
+
+/**
+ * This is to handle and check authentication for routing.
+ */
+router.beforeEach((to, from, next) => {
+    const isLoggedIn = store.state.token !== null;
+    if (!isLoggedIn && to.name !== "Login") {
+        return next("/login");
+    } else if (isLoggedIn && to.name === "Login"){
+        return next("/")
+    } next();
 });
 
 export default router;

@@ -1,11 +1,17 @@
 <template>
     <div class="main">
+        <Nav />
         <h1>This is Dashboard Page</h1>
     </div>
 </template>
 <script>
+import Nav from "../components/Nav.vue";
+
 export default {
     name: "Dashboard",
+    components: {
+        Nav,
+    },
 };
 </script>
 

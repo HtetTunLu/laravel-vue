@@ -1,9 +1,12 @@
 <template>
     <confirm :isDelete="deleteFlg" @no="cancelModal" @yes="confirmDelete" />
     <div class="main">
+        <Nav />
+        <back />
         <div class="sub-main">
+
             <div class="container">
-                <p class="typed">Accessory Lists</p>
+                <p class="typed">Accessories</p>
             </div>
             <div class="sub-container">
                 <button class="btn" @click="onCreate">New</button>
@@ -23,12 +26,16 @@
 import axios from "axios";
 import Cards from "../../components/Cards.vue";
 import Confirm from "../../components/Confirm.vue";
+import Nav from "../../components/Nav.vue";
+import Back from "../../components/Back.vue"
 
 export default {
     name: "Dashboard",
     components: {
         Cards,
         Confirm,
+        Nav,
+        Back
     },
     data: () => {
         return {
@@ -93,6 +100,7 @@ export default {
         rgba(253, 255, 244, 1) 100%
     );
     text-align: center;
+    margin-left: 6%;
 }
 .sub-main {
     width: 75%;
