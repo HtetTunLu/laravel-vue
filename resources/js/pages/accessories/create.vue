@@ -91,7 +91,7 @@ export default {
                     document.getElementsByClassName(
                         "error-msg"
                     )[0].style.display = "block";
-                    this.errorMsg = error.response.data.message;
+                    this.errorMsg = Object.values(error.response.data.data)[0][0];
                 });
         },
         clearImg() {

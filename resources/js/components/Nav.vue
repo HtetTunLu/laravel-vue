@@ -12,6 +12,7 @@
         <a @click="goTo('Accessories')">Accessories</a>
         <a @click="goTo('Lists')">Lists</a>
         <a @click="goTo('Users')">Users</a>
+        <a @click="goTo('Teams')">Teams</a>
     </div>
 </template>
 

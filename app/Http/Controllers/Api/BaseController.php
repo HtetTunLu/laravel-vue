@@ -22,6 +22,17 @@ class BaseController extends Controller
 
         return response()->json($response, 200);
     }
+    public function sendCustomResponse($result, $flg, $message)
+    {
+        $response = [
+            'success' => true,
+            'data'    => $result,
+            'is_next' => $flg,
+            'message' => $message,
+        ];
+
+        return response()->json($response, 200);
+    }
 
     /**
      * return error response.
@@ -35,7 +46,7 @@ class BaseController extends Controller
             'message' => $error,
         ];
 
-        if(!empty($errorMessages)){
+        if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
 

@@ -4,7 +4,7 @@
         <back />
         <div class="sub-main">
             <div class="container">
-                <p class="typed">Accessory Edit Form</p>
+                <p class="typed">Team Create Form</p>
             </div>
             <div class="form">
                 <div class="error-msg">
@@ -20,26 +20,16 @@
                     />
                 </div>
                 <div class="form-control">
-                    <label for="image">Image</label>
-                    <input
-                        type="file"
-                        class="custom-file-input"
-                        @change="uploadImg"
-                    />
-                    <form action="">
-                        <div class="selected-img">
-                            <img
-                                :src="this.image"
-                                alt="img"
-                                class="img"
-                                id="avatar"
-                            />
-                            <div class="clear" @click="clearImg">clear</div>
-                        </div>
-                    </form>
+                    <label for="name">Floor</label>
+                    <select name="cars" class="select" v-model="floor">
+                        <option disabled selected value>select floor</option>
+                        <option value="1">First</option>
+                        <option value="2">Second</option>
+                        <option value="4">Fourth</option>
+                    </select>
                 </div>
                 <div class="form-control-btn">
-                    <button type="submit" class="btn" @click="update">
+                    <button type="submit" class="btn" @click="save">
                         Submit
                     </button>
                 </div>
@@ -49,11 +39,11 @@
 </template>
 
 <script>
-import Nav from "../../../components/Nav.vue";
-import Back from "../../../components/Back.vue";
+import Nav from "../../components/Nav.vue";
+import Back from "../../components/Back.vue";
 
 export default {
-    name: "AccessoryEdit",
+    name: "AccessoryCreate",
     components: {
         Nav,
         Back,
@@ -61,58 +51,25 @@ export default {
     data: () => {
         return {
             name: "",
-            image: "",
+            floor: "",
             errorMsg: "",
         };
     },
-    beforeCreate() {
-        axios.defaults.headers = {
-            Accept: "application/json",
-            Authorization: `Bearer ${this.$store.state.token}`,
-        };
-        axios
-            .get(
-                `/api/accessories/${this.$router.currentRoute._value.params.id}`
-            )
-            .then((response) => {
-                const selected =
-                    document.getElementsByClassName("selected-img")[0];
-                selected.style.display = "block";
-                this.name = response.data.data.name;
-                this.image = `data:image/png;base64,${response.data.data.image}`;
-            });
-    },
     methods: {
-        uploadImg(event) {
-            document.getElementsByClassName("error-msg")[0].style.display =
-                "none";
-            this.image = event.target.files[0];
-            const selected = document.getElementsByClassName("selected-img")[0];
-            selected.style.display = "block";
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                selected.children[0].src = e.target.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        },
-        async update() {
+        save() {
             const accessToken = this.$store.state.token;
             axios.defaults.headers = {
                 Accept: "application/json",
                 Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/x-www-form-urlencoded",
             };
             const formData = new FormData();
             formData.append("name", this.name);
-            formData.append("image", this.image);
-            formData.append("_method", "PATCH");
+            formData.append("floor", this.floor);
+            console.log(this.name, this.floor)
             axios
-                .post(
-                    `/api/accessories/${this.$router.currentRoute._value.params.id}`,
-                    formData
-                )
+                .post("/api/teams", formData)
                 .then((response) => {
-                    this.$router.push({ name: "Accessories" });
+                    this.$router.push({ name: "Teams" });
                 })
                 .catch((error) => {
                     document.getElementsByClassName(
@@ -120,11 +77,6 @@ export default {
                     )[0].style.display = "block";
                     this.errorMsg = Object.values(error.response.data.data)[0][0];
                 });
-        },
-        clearImg() {
-            this.image = "";
-            document.getElementsByClassName("selected-img")[0].style.display =
-                "none";
         },
     },
 };
@@ -204,7 +156,8 @@ export default {
     color: #58b2ff;
 }
 
-.name {
+.name,
+.select {
     padding: 10px;
     border: none;
     width: 60%;
@@ -215,7 +168,11 @@ export default {
     font-size: 14px;
     opacity: 0.7;
 }
-.name:focus {
+.select {
+    width: 32%;
+}
+.name:focus,
+.select:focus {
     outline: none;
 }
 .form-control-btn {
@@ -237,57 +194,10 @@ export default {
     height: 30px;
     color: white;
 }
-.custom-file-input {
-    color: transparent;
-}
-.custom-file-input::-webkit-file-upload-button {
-    visibility: hidden;
-}
-.custom-file-input::before {
-    content: "Select some files";
-    color: black;
-    display: inline-block;
-    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
-    border: 1px solid #999;
-    border-radius: 8px;
-    padding: 8px 8px;
-    outline: none;
-    white-space: nowrap;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: pointer;
-    text-shadow: 1px 1px #fff;
-    font-weight: 700;
-    font-size: 10pt;
-    color: rgb(254, 140, 140);
-    background: rgb(251, 226, 226);
-    border: none;
-}
-.custom-file-input:hover::before {
-    border-color: black;
-}
-.custom-file-input:active {
-    outline: 0;
-}
-.custom-file-input:active::before {
-    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
-}
 .selected-img {
     margin-top: 30px;
     text-align: center;
     display: none;
-}
-.img {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-}
-.clear {
-    display: inline-block;
-    color: red;
-    font-weight: bold;
-    font-size: 13px;
-    cursor: pointer;
 }
 .error-msg {
     color: red;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AccessoriesController;
+use App\Http\Controllers\API\TeamsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -24,4 +25,5 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('accessories', AccessoriesController::class);
+    Route::resource('teams', TeamsController::class);
 });
