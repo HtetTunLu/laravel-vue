@@ -4,12 +4,12 @@ import createPersistedState from "vuex-persistedstate";
 export default new Vuex.Store({
     state: {
         token: null,
-        userName: "",
+        user: null,
     },
     mutations: {
         saveLoginInfo(state, loginInfo) {
             state.token = loginInfo.data.token;
-            state.userName = loginInfo.data.name;
+            state.user = loginInfo.data.user;
         },
         logout(state) {
             (state.token = null), (state.userName = "");

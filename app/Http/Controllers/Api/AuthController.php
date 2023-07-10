@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class AuthController extends Controller
 {
@@ -20,14 +22,16 @@ class AuthController extends Controller
     {
         try {
             //Validated
-            $validateUser = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email',
+                    'password' => 'required'
+                ]
+            );
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid inputs, plz try again....',
@@ -46,7 +50,6 @@ class AuthController extends Controller
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -63,13 +66,15 @@ class AuthController extends Controller
     public function loginUser(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(),
-            [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ]
+            );
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid inputs, plz try again....',
@@ -77,7 +82,7 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Email & Password does not match with our record.',
@@ -85,14 +90,24 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-
+            $user_info = UserInfo::where('user_id', $user['id'])->first();
+            if ($user_info) {
+                $path = public_path() . "/upload/" . $user_info['avatar'];
+                if (!File::exists($path)) {
+                    return response()->json(['message' => 'Image not found.'], 404);
+                }
+                $file = (string) File::get($path);
+                $user->employee_id = $user_info['employee_id'];
+                $user->team = $user_info->team;
+                $user->entry_date = $user_info['entry_date'];
+                $user->avatar = base64_encode($file);
+            };
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
-                'name' => $user['name'],
+                'user' => $user,
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

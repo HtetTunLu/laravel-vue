@@ -8,6 +8,10 @@ import Teams from "./pages/teams/index.vue";
 import TeamCreate from "./pages/teams/create.vue";
 import TeamEdit from "./pages/teams/_id/edit.vue";
 import TeamShow from "./pages/teams/_id/show.vue";
+import Users from "./pages/users/index.vue";
+import UserCreate from "./pages/users/create.vue";
+import UserEdit from "./pages/users/_id/edit.vue";
+import UserShow from "./pages/users/_id/show.vue";
 import Test from "./pages/Test.vue";
 import Login from "./pages/Login.vue";
 import store from "./store";
@@ -62,6 +66,26 @@ const routes = [
         path: "/teams/:id/show",
         name: "TeamShow",
         component: TeamShow,
+    },
+    {
+        path: "/users",
+        name: "Users",
+        component: Users,
+    },
+    {
+        path: "/users/create",
+        name: "UserCreate",
+        component: UserCreate,
+    },
+    {
+        path: "/users/:id/edit",
+        name: "UserEdit",
+        component: UserEdit,
+    },
+    {
+        path: "/users/:id/show",
+        name: "UserShow",
+        component: UserShow,
     },
     {
         path: "/test",

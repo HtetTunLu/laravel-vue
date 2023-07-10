@@ -30,6 +30,11 @@ class TeamsController extends BaseController
         return $this->sendCustomResponse($result, $custom, 'Teams retrieved successfully.');
     }
 
+    public function get_teams() {
+        $teams = Team::all();
+        return $this->sendResponse($teams, 'Teams retrieved successfully.');
+    }
+
     /**
      * Store a newly created resource in storage.
      */

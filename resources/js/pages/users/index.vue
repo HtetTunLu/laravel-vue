@@ -5,13 +5,14 @@
         <back />
         <div class="sub-main">
             <div class="container">
-                <p class="typed">Team Lists</p>
+                <p class="typed">Users Lists</p>
             </div>
             <div class="sub-container">
+                <button class="csv-btn">CSV upload</button>
                 <button class="btn" @click="onCreate">New</button>
             </div>
-            <Table
-                :teams="teams"
+            <Table2
+                :users="users"
                 @on-edit="onEdit"
                 @on-show="onShow"
                 @on-delete="onDelete"
@@ -26,10 +27,11 @@
 </template>
 <script>
 import axios from "axios";
+import moment from "moment";
 import Confirm from "../../components/Confirm.vue";
 import Nav from "../../components/Nav.vue";
 import Back from "../../components/Back.vue";
-import Table from "../../components/Table.vue";
+import Table2 from "../../components/Table2.vue";
 import Paginate from "../../components/Paginate.vue";
 
 export default {
@@ -38,12 +40,12 @@ export default {
         Confirm,
         Nav,
         Back,
-        Table,
+        Table2,
         Paginate,
     },
     data: () => {
         return {
-            teams: [],
+            users: [],
             deleteFlg: false,
             isPaginate: false,
             total_page: 0,
@@ -55,13 +57,13 @@ export default {
     },
     methods: {
         onCreate() {
-            this.$router.push({ name: "TeamCreate" });
+            this.$router.push({ name: "UserCreate" });
         },
         onShow(id) {
-            this.$router.push({ path: `/teams/${id}/show` });
+            this.$router.push({ path: `/users/${id}/show` });
         },
         onEdit(id) {
-            this.$router.push({ path: `/teams/${id}/edit` });
+            this.$router.push({ path: `/users/${id}/edit` });
         },
         onDelete(id) {
             this.deleteFlg = true;
@@ -72,7 +74,7 @@ export default {
             this.deleteId = -1;
         },
         confirmDelete() {
-            axios.delete(`/api/teams/${this.deleteId}`).then((response) => {
+            axios.delete(`/api/users/${this.deleteId}`).then((response) => {
                 this.changePage(1);
                 this.deleteFlg = false;
                 for (let i = 0; i < this.total_page; i++) {
@@ -89,14 +91,12 @@ export default {
                 Accept: "application/json",
                 Authorization: `Bearer ${accessToken}`,
             };
-            axios.get(`/api/teams?search=${index}`).then((response) => {
-                this.teams = response.data.data.map((e) => {
-                    if (e.floor === 1) {
-                        e.floor = "First Floor";
-                    } else if (e.floor === 2) {
-                        e.floor = "Second Floor";
-                    } else {
-                        e.floor = "Fourth Floor";
+            axios.get(`/api/users?search=${index}`).then((response) => {
+                this.users = response.data.data.map((e) => {
+                    if (e.entry_date) {
+                        e.entry_date = moment(e.entry_date).format(
+                            "YYYY-MM-DD"
+                        );
                     }
                     return e;
                 });
@@ -134,12 +134,12 @@ export default {
 }
 .sub-container {
     text-align: right;
-    margin-right: 3%;
 }
 h1 {
     color: #615f5f;
     text-align: center;
 }
+.csv-btn,
 .btn {
     background: rgb(157, 187, 165);
     background: linear-gradient(
@@ -152,15 +152,20 @@ h1 {
     border: 1px solid white;
     width: 100px;
     cursor: pointer;
-    margin: 10px;
+    /* margin: 10px;     */
     height: 33px;
     color: white;
     font-size: 15px;
     font-weight: bold;
 }
+.csv-btn:hover,
 .btn:hover {
     opacity: 0.5;
     color: black;
+}
+.csv-btn{
+    width: 120px;
+    margin-right: 10px;
 }
 .container {
     display: inline-block;

@@ -12,4 +12,8 @@ class Team extends Model
     protected $fillable = [
         'name', 'floor'
     ];
+
+    public function user_info() {
+        return $this->hasOne(UserInfo::class);
+    }
 }

@@ -36,9 +36,17 @@ export default {
                 this.$router.push({ name: "Login" });
             });
         },
+        editProfile() {
+            this.$router.push({
+                path: `/users/${this.$store.state.user.id}/edit`,
+            });
+        },
     },
     created() {
-        this.userName = this.$store.state.userName;
+        this.userName = this.$store.state.user.name;
+        this.avatar = this.$store.state.user.avatar
+            ? `data:image/png;base64,${this.$store.state.user.avatar}`
+            : image;
     },
 };
 </script>
