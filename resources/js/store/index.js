@@ -12,7 +12,7 @@ export default new Vuex.Store({
             state.user = loginInfo.data.user;
         },
         logout(state) {
-            (state.token = null), (state.userName = "");
+            (state.token = null), (state.user = null);
         },
     },
     actions: {

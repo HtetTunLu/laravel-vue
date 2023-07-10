@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\UserInfoResource;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -83,7 +84,7 @@ class UsersController extends BaseController
         ];
 
         $userInfo = UserInfo::create($info);
-
+        UserRole::create(['role_id' => 3, 'user_id' => $user['id']]);
         return $this->sendResponse(new UserInfoResource($userInfo), 'User created successfully.');
     }
 

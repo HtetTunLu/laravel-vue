@@ -9,10 +9,10 @@
             </div>
         </div>
         <a @click="goTo('Dashboard')">Dashboard</a>
-        <a @click="goTo('Accessories')">Accessories</a>
-        <a @click="goTo('Lists')">Lists</a>
-        <a @click="goTo('Users')">Users</a>
-        <a @click="goTo('Teams')">Teams</a>
+        <a @click="goTo('Accessories')" v-if="adminPermit">Accessories</a>
+        <a @click="goTo('Lists')" v-if="adminPermit">Lists</a>
+        <a @click="goTo('Users')" v-if="managerPermit">Users</a>
+        <a @click="goTo('Teams')" v-if="adminPermit">Teams</a>
     </div>
 </template>
 
@@ -26,6 +26,17 @@ export default {
             avatar: image,
             userName: "",
         };
+    },
+    computed: {
+        adminPermit() {
+            return this.$store.state.user.role === 1;
+        },
+        managerPermit() {
+            return (
+                this.$store.state.user.role === 1 ||
+                this.$store.state.user.role === 2
+            );
+        },
     },
     methods: {
         goTo(pageName) {

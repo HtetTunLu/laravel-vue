@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -102,6 +103,7 @@ class AuthController extends Controller
                 $user->entry_date = $user_info['entry_date'];
                 $user->avatar = base64_encode($file);
             };
+            $user->role = UserRole::where('user_id', $user->id)->first()->role_id;
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
