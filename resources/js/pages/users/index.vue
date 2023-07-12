@@ -8,7 +8,12 @@
                 <p class="typed">Users Lists</p>
             </div>
             <div class="sub-container">
-                <button class="csv-btn">CSV upload</button>
+                <button class="csv-btn" @click="csvDownload">Download</button>
+                <input
+                    type="file"
+                    class="custom-file-input"
+                    @change="uploadImg"
+                />
                 <button class="btn" @click="onCreate">New</button>
             </div>
             <Table2
@@ -110,6 +115,48 @@ export default {
                 }
             });
         },
+        csvDownload() {
+            axios.get("/api/csv_download").then((response) => {
+                const data1 = response.data.data;
+                const csvData = objectToCsv(data1);
+                download(csvData);
+            });
+            const objectToCsv = function (data1) {
+                const csvRows = [];
+                const headers = Object.keys(data1[0]);
+                csvRows.push(headers.join(","));
+                for (const row of data1) {
+                    const values = headers.map((header) => {
+                        const escaped = ("" + row[header]).replace(/"/g, '\\"');
+                        return `"${escaped}"`;
+                    });
+                    csvRows.push(values.join(","));
+                }
+                return csvRows.join("\n");
+            };
+            const download = function (data1) {
+                const blob = new Blob([data1], { type: "text/csv" });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.setAttribute("hidden", "");
+                a.setAttribute("href", url);
+                a.setAttribute("download", "download.csv");
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+        },
+        uploadImg(e) {
+            const regex = new RegExp("[^.]+$");
+            const extension = e.target.files[0].name.match(regex);
+            if (extension[0] === "csv" || extension[0] === "xslx") {
+                const formData = new FormData();
+                formData.append("file", e.target.files[0]);
+                axios.post("/api/csv_upload", formData).then((response) => {
+                    this.changePage(1);
+                });
+            }
+        },
     },
 };
 </script>
@@ -163,7 +210,7 @@ h1 {
     opacity: 0.5;
     color: black;
 }
-.csv-btn{
+.csv-btn {
     width: 120px;
     margin-right: 10px;
 }
@@ -201,5 +248,44 @@ h1 {
     100% {
         border-right-color: transparent;
     }
+}
+.custom-file-input {
+    width: 10.5%;
+    color: transparent;
+}
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.custom-file-input::before {
+    content: "upload";
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 8px 28px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 10pt;
+    color: white;
+    background: linear-gradient(
+        90deg,
+        rgba(157, 187, 165, 1) 0%,
+        #95a5a6 45%,
+        rgba(221, 226, 219, 1) 100%
+    );
+    border: none;
+}
+.custom-file-input:hover::before {
+    border-color: black;
+}
+.custom-file-input:active {
+    outline: 0;
+}
+.custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
 </style>

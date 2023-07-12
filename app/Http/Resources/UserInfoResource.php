@@ -17,10 +17,11 @@ class UserInfoResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'name' => $this->name,
+            'email' => $this->email,
             'avatar' => $this->avatar,
             'employee_id' => $this->employee_id,
-            'team_id' => $this->team_id,
+            'team' => $this->team,
             'entry_date' => $this->entry_date,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),

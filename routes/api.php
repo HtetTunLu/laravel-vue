@@ -29,4 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('teams', TeamsController::class);
     Route::resource('users', UsersController::class);
     Route::get('get_teams', [TeamsController::class, "get_teams"]);
+    Route::get('csv_download', [UsersController::class, "csv_download"]);
+    Route::post('csv_upload', [UsersController::class, "csv_upload"]);
 });

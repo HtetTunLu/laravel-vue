@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserInfoResource;
 use App\Models\User;
+use App\Models\Team;
 use App\Models\UserInfo;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Hash;
@@ -26,12 +27,14 @@ class UsersController extends BaseController
         $users = $users->map(function ($user, $key) {
             $user_info = UserInfo::where('user_id', $user['id'])->first();
             if ($user_info) {
-                $path = public_path() . "/upload/" . $user_info['avatar'];
-                if (!File::exists($path)) {
-                    return response()->json(['message' => 'Image not found.'], 404);
+                if ($user_info['avatar']) {
+                    $path = public_path() . "/upload/" . $user_info['avatar'];
+                    if (!File::exists($path)) {
+                        return response()->json(['message' => 'Image not found.'], 404);
+                    }
+                    $file = (string) File::get($path);
                 }
-                $file = (string) File::get($path);
-                $user->avatar = base64_encode($file);
+                $user->avatar = $user_info['avatar'] ? base64_encode($file) : null;
                 $user->employee_id = $user_info['employee_id'];
                 $user->team = $user_info->team->name;
                 $user->entry_date = $user_info['entry_date'];
@@ -43,8 +46,79 @@ class UsersController extends BaseController
                 return $name;
             }
         });
+        $result = UserInfoResource::collection($search_users);
         $custom = [$users->count() > $request->search * 5, $users->count()];
-        return $this->sendCustomResponse($search_users, $custom, 'Users retrieved successfully.');
+        return $this->sendCustomResponse($result, $custom, 'Users retrieved successfully.');
+    }
+
+    public function csv_download()
+    {
+        $users = User::all();
+
+        $users = $users->map(function ($user, $key) {
+            $user_info = UserInfo::where('user_id', $user['id'])->first();
+            $user = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'employee_id' =>  $user_info ? $user_info['employee_id'] : "",
+                'team' => $user_info ? $user_info->team->name : "",
+                'entry_date' => $user_info ? \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user_info['entry_date'])
+                    ->format('Y-m-d') : ""
+            ];
+            return $user;
+        });
+        return $this->sendResponse($users, 'Users send successfully.');
+    }
+
+    public function csv_upload(Request $request)
+    {
+        $file = $request->file;
+
+        $customerArr = $this->csvToArray($file);
+        for ($i = 0; $i < count($customerArr); $i++) {
+            $select_team = Team::where('name', $customerArr[$i]['team'])->first();
+            if (!$select_team) {
+                $line_no = $i + 1;
+                return "invalid team in lin number $line_no";
+            }
+            $user = User::firstOrCreate([
+                'name' => $customerArr[$i]['name'],
+                'email' => $customerArr[$i]['email'],
+                'password' => Hash::make("Password")
+            ]);
+            UserInfo::firstOrCreate([
+                'user_id' => $user->id,
+                'employee_id' => $customerArr[$i]['employee_id'],
+                'team_id' => Team::where('name', $customerArr[$i]['team'])->first()->id,
+                'entry_date' => \Carbon\Carbon::parse($customerArr[$i]['entry_date'])->toDateString()
+            ]);
+            UserRole::firstOrCreate([
+                'role_id' => 3,
+                'user_id' => $user->id
+            ]);
+        }
+
+        return $this->sendResponse([], 'Users send successfully.');
+    }
+
+    function csvToArray($filename = '', $delimiter = ',')
+    {
+        if (!file_exists($filename) || !is_readable($filename))
+            return false;
+
+        $header = null;
+        $data = array();
+        if (($handle = fopen($filename, 'r')) !== false) {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
+                if (!$header)
+                    $header = $row;
+                else
+                    $data[] = array_combine($header, $row);
+            }
+            fclose($handle);
+        }
+
+        return $data;
     }
 
     /**
