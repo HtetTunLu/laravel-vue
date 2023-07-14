@@ -8,6 +8,7 @@ use App\Http\Resources\AccessoryResource;
 use App\Models\Accessory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class AccessoriesController extends BaseController
 {
@@ -30,9 +31,37 @@ class AccessoriesController extends BaseController
         return $this->sendResponse(AccessoryResource::collection($accessories), 'Post retrieved successfully.');
     }
 
-    public function get_accessories() {
-        $teams = Accessory::all();
-        return $this->sendResponse($teams, 'Accessories retrieved successfully.');
+    public function get_accessories()
+    {
+        $accessories = Accessory::all();
+        return $this->sendResponse($accessories, 'Accessories retrieved successfully.');
+    }
+
+    public function get_infos()
+    {
+        $team = Auth::user()->user_info->team;
+        $accessories = Accessory::all();
+        foreach ($accessories as $accessory) {
+            $path = public_path() . "/upload/" . $accessory['image'];
+            if (!File::exists($path)) {
+                return response()->json(['message' => 'Image not found.'], 404);
+            }
+            $file = (string) File::get($path);
+            $accessory->image = base64_encode($file);
+            $total = 0;
+            $used = 0;
+            $lists = $accessory->accessory_lists->where("team_id", $team->id);
+            foreach ($lists as $list) {
+                $total = $total + $list->quantity;
+            };
+            foreach ($accessory->records as $record) {
+                $used = $used + $record->count;
+            };
+            $accessory->total = $total;
+            $accessory->used = $used;
+            $accessory->team = $team;
+        }
+        return $this->sendResponse($accessories, 'Accessories retrieved successfully.');
     }
 
     /**

@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Dashboard from "./pages/Dashboard.vue";
+import Report from "./pages/Report.vue";
 import Accessories from "./pages/accessories/index.vue";
 import AccessoryCreate from "./pages/accessories/create.vue";
 import AccessoryEdit from "./pages/accessories/_id/edit.vue";
@@ -29,6 +30,11 @@ const routes = [
         path: "/",
         name: "Dashboard",
         component: Dashboard,
+    },
+    {
+        path: "/report",
+        name: "Report",
+        component: Report,
     },
     {
         path: "/accessories",
@@ -124,9 +130,10 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn = store.state.token !== null;
     if (!isLoggedIn && to.name !== "Login") {
         return next("/login");
-    } else if (isLoggedIn && to.name === "Login"){
-        return next("/")
-    } next();
+    } else if (isLoggedIn && to.name === "Login") {
+        return next("/");
+    }
+    next();
 });
 
 export default router;

@@ -13,7 +13,11 @@ class Accessory extends Model
         'name', 'image'
     ];
 
-    public function accessory_list() {
-        return $this->hasOne(AccessoryList::class);
+    public function accessory_lists() {
+        return $this->hasMany(AccessoryList::class);
+    }
+
+    public function records() {
+        return $this->hasMany(Record::class);
     }
 }

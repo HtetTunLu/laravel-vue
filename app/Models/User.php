@@ -23,7 +23,8 @@ class User extends Authenticatable
         'password',
     ];
 
-    public function user_info() {
+    public function user_info()
+    {
         return $this->hasOne(UserInfo::class);
     }
 
@@ -46,4 +47,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function records()
+    {
+        return $this->hasMany(Record::class);
+    }
 }

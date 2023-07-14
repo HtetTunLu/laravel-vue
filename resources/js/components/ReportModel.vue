@@ -1,11 +1,14 @@
 <template>
     <div id="myModal" class="modal" v-if="isDelete">
         <div class="modal-content">
-            <!-- <span class="close">&times;</span> -->
-            <p>Are u sure want to delete ?</p>
+            <p>{{ accessory.name }}</p>
+            <div>
+                <label for="count" style="padding-right: 10px">Count</label>
+                <input type="number" name="count" v-model="count"/>
+            </div>
 
-            <button class="btn yes" @click="$emit('yes')">Yes</button>
-            <button class="btn" @click="no">No</button>
+            <button class="btn no" @click="no">Cancel</button>
+            <button class="btn" @click="$emit('yes', count)">Report</button>
         </div>
     </div>
 </template>
@@ -13,7 +16,12 @@
 <script>
 export default {
     name: "Confirm",
-    props: ["isDelete"],
+    props: ["isDelete", "accessory"],
+    data: () => {
+        return {
+            count: null
+        }
+    },
     methods: {
         no() {
             this.$emit("no");
@@ -85,11 +93,28 @@ export default {
     font-weight: bold;
     padding: 7px;
 }
-.yes {
+.no {
     margin-left: 0;
 }
 .btn:hover {
     opacity: 0.5;
     color: red;
+}
+input {
+    padding: 6px;
+    border: 1px solid #888888;
+    border-radius: 10px;
+}
+/* Works for Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Works for Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 </style>
