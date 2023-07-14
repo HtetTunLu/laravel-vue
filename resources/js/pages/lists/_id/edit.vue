@@ -4,7 +4,7 @@
         <back />
         <div class="sub-main">
             <div class="container">
-                <p class="typed">Accessory List Create Form</p>
+                <p class="typed">Accessory List Edit Form</p>
             </div>
             <div class="form">
                 <div class="error-msg">
@@ -63,8 +63,8 @@
 </template>
 
 <script>
-import Nav from "../../components/Nav.vue";
-import Back from "../../components/Back.vue";
+import Nav from "../../../components/Nav.vue";
+import Back from "../../../components/Back.vue";
 
 export default {
     name: "AccessoryCreate",
@@ -83,12 +83,23 @@ export default {
             errorMsg: "",
         };
     },
-    created() {
-        const accessToken = this.$store.state.token;
+    beforeCreate() {
         axios.defaults.headers = {
             Accept: "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${this.$store.state.token}`,
         };
+        axios
+            .get(
+                `/api/accessory_lists/${this.$router.currentRoute._value.params.id}`
+            )
+            .then((response) => {
+                this.selectedAcc = response.data.data.accessory.id;
+                this.selectedTeam = response.data.data.team.id;
+                this.quantity = response.data.data.quantity;
+                this.remind = response.data.data.remind_limit;
+            });
+    },
+    created() {
         axios.get("/api/get_accessories").then((response) => {
             this.accessories = response.data.data;
             const defaultSelect = [
@@ -117,8 +128,12 @@ export default {
             formData.append("team_id", this.selectedTeam);
             formData.append("quantity", this.quantity);
             formData.append("remind_limit", this.remind);
+            formData.append("_method", "PATCH");
             axios
-                .post("/api/accessory_lists", formData)
+                .post(
+                    `/api/accessory_lists/${this.$router.currentRoute._value.params.id}`,
+                    formData
+                )
                 .then((response) => {
                     this.$router.push({ name: "Lists" });
                 })

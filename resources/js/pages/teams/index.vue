@@ -80,7 +80,11 @@ export default {
                         .getElementById(`page${i + 1}`)
                         .classList.remove("is-active");
                 }
-                document.getElementById(`page${1}`).classList.add("is-active");
+                if (this.isPaginate) {
+                    document
+                        .getElementById(`page${1}`)
+                        .classList.add("is-active");
+                }
             });
         },
         changePage(index) {

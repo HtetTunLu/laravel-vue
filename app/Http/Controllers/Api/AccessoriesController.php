@@ -30,6 +30,11 @@ class AccessoriesController extends BaseController
         return $this->sendResponse(AccessoryResource::collection($accessories), 'Post retrieved successfully.');
     }
 
+    public function get_accessories() {
+        $teams = Accessory::all();
+        return $this->sendResponse($teams, 'Accessories retrieved successfully.');
+    }
+
     /**
      * Store a newly created resource in storage.
      *

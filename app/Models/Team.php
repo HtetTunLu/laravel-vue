@@ -13,7 +13,13 @@ class Team extends Model
         'name', 'floor'
     ];
 
-    public function user_info() {
+    public function user_info()
+    {
         return $this->hasOne(UserInfo::class);
+    }
+
+    public function accessory_list()
+    {
+        return $this->hasOne(AccessoryList::class);
     }
 }

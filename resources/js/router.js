@@ -12,6 +12,9 @@ import Users from "./pages/users/index.vue";
 import UserCreate from "./pages/users/create.vue";
 import UserEdit from "./pages/users/_id/edit.vue";
 import UserShow from "./pages/users/_id/show.vue";
+import Lists from "./pages/lists/index.vue";
+import ListCreate from "./pages/lists/create.vue";
+import ListEdit from "./pages/lists/_id/edit.vue";
 import Test from "./pages/Test.vue";
 import Login from "./pages/Login.vue";
 import store from "./store";
@@ -86,6 +89,21 @@ const routes = [
         path: "/users/:id/show",
         name: "UserShow",
         component: UserShow,
+    },
+    {
+        path: "/lists",
+        name: "Lists",
+        component: Lists,
+    },
+    {
+        path: "/lists/create",
+        name: "ListCreate",
+        component: ListCreate,
+    },
+    {
+        path: "/lists/:id/edit",
+        name: "ListEdit",
+        component: ListEdit,
     },
     {
         path: "/test",

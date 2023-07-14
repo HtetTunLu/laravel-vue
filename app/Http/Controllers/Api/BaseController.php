@@ -24,7 +24,6 @@ class BaseController extends Controller
     }
     public function sendCustomResponse($result, $flg, $message)
     {
-        // dd($result);
         $response = [
             'success' => true,
             'data'    => $result,

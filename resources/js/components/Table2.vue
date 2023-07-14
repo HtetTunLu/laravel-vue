@@ -2,7 +2,7 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr>
+                <tr v-if="users">
                     <th>Id</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -11,19 +11,37 @@
                     <th>Entry Date</th>
                     <th>Actions</th>
                 </tr>
+                <tr v-else>
+                    <th>Id</th>
+                    <th>Accessory</th>
+                    <th>Team</th>
+                    <th>Quantity</th>
+                    <th>Remind Limit</th>
+                    <th>Added Date</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
-                <tr v-for="user in users" :key="user.id">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.employee_id }}</td>
-                    <td>{{ user.team }}</td>
-                    <td>{{ user.entry_date }}</td>
+                <tr v-for="param in params" :key="param.id">
+                    <td>{{ param.id }}</td>
+                    <td>{{ users ? param.name : param.accessory_name }}</td>
+                    <td>{{ users ? param.email : param.team_name }}</td>
+                    <td>{{ users ? param.employee_id : param.quantity }}</td>
+                    <td>{{ users ? param.team : param.remind_limit }}</td>
+                    <td>{{ users ? param.entry_date : param.created_at }}</td>
                     <td>
-                        <button @click="$emit('on-edit', user.id)">Edit</button>
-                        <button @click="$emit('on-show', user.id)">Show</button>
-                        <button @click="$emit('on-delete', user.id)">Delete</button>
+                        <button @click="$emit('on-edit', param.id)">
+                            Edit
+                        </button>
+                        <button
+                            @click="$emit('on-show', param.id)"
+                            v-if="users"
+                        >
+                            Show
+                        </button>
+                        <button @click="$emit('on-delete', param.id)">
+                            Delete
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -34,7 +52,15 @@
 <script>
 export default {
     name: "Table2",
-    props: ["users"],
+    props: ["users", "lists"],
+    data: () => {
+        return {
+            params: null,
+        };
+    },
+    updated() {
+        this.params = this.users ? this.users : this.lists;
+    },
 };
 </script>
 

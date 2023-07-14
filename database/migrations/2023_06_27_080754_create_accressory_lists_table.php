@@ -14,12 +14,17 @@ return new class extends Migration
         Schema::create('accessory_lists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('accessory_id');
+            $table->unsignedBigInteger('team_id');
             $table->integer('quantity');
             $table->integer('remind_limit');
             $table->timestamps();
             $table->foreign('accessory_id')
                 ->references('id')
                 ->on('accessories')
+                ->onDelete('cascade');
+            $table->foreign('team_id')
+                ->references('id')
+                ->on('teams')
                 ->onDelete('cascade');
         });
     }

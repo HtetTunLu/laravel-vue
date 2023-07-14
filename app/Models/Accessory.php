@@ -12,4 +12,8 @@ class Accessory extends Model
     protected $fillable = [
         'name', 'image'
     ];
+
+    public function accessory_list() {
+        return $this->hasOne(AccessoryList::class);
+    }
 }
