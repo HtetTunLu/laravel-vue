@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="chat">
+        <span class="title">{{ title }}</span>
         <canvas :id="`chat${id}`"></canvas>
     </div>
 </template>
@@ -8,30 +9,46 @@
 import Chart from "chart.js/auto";
 export default {
     name: "Pie",
-    props: ["id"],
+    props: ["id", "title", "labels", 'data'],
     mounted() {
         const ctx = document.getElementById(`chat${this.id}`);
         new Chart(ctx, {
             type: "doughnut",
             data: {
-                labels: ["Red", "Blue", "Yellow"],
+                labels: this.labels,
                 datasets: [
                     {
-                        label: "My First Dataset",
-                        data: [80, 20, 30],
+                        label: "Counts",
+                        data: this.data,
                         backgroundColor: [
-                            "rgb(255, 99, 132)",
-                            "rgb(54, 162, 235)",
-                            "rgb(255, 205, 86)",
+                            "#adadad",
+                            "#c2c0c0",
+                            "#e6e8e7",
+                            "white",
                         ],
                         hoverOffset: 2,
                     },
                 ],
             },
             options: {
-                cutout: 100,
+                cutout: 95,
             },
         });
     },
 };
 </script>
+
+<style scoped>
+.chat {
+    position: relative;
+}
+.title {
+    position: absolute;
+    top: 53%;
+    left: 35%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #888888;
+}
+</style>

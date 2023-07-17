@@ -177,7 +177,12 @@ export default {
                     formData
                 )
                 .then((response) => {
-                    this.$router.push({ name: "Users" });
+                    this.$router.push({
+                        name:
+                            this.$store.state.user.role === 1
+                                ? "Users"
+                                : "Dashboard",
+                    });
                 })
                 .catch((error) => {
                     document.getElementsByClassName(

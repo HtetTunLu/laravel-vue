@@ -8,7 +8,18 @@
             <div class="used" v-for="card in cards" :key="card">
                 <h3>Records Analysis for {{ card.name }}</h3>
                 <div class="overall">
-                    <doughnut class="doughnut" :id="card.name" />
+                    <doughnut
+                        class="doughnut"
+                        :id="card.name"
+                        :title="card.name"
+                        :labels="floors"
+                        :data="
+                            chartDataCalc(
+                                card.scores,
+                                totalCalc(card.scores) - usedCalc(card.scores)
+                            )
+                        "
+                    />
                     <div class="analysis">
                         <h3>Each Floor Overall Analysis</h3>
                         <div>
@@ -36,11 +47,11 @@
                                     <th>Remaining</th>
                                 </tr>
                                 <tr>
-                                    <td>{{ totoalCalc(card.scores) }}</td>
+                                    <td>{{ totalCalc(card.scores) }}</td>
                                     <td>{{ usedCalc(card.scores) }}</td>
                                     <td>
                                         {{
-                                            totoalCalc(card.scores) -
+                                            totalCalc(card.scores) -
                                             usedCalc(card.scores)
                                         }}
                                     </td>
@@ -68,6 +79,7 @@ export default {
         return {
             scores: [],
             cards: [],
+            floors: [],
         };
     },
     created() {
@@ -92,10 +104,25 @@ export default {
                     });
                     return e;
                 });
+            this.floors = this.scores
+                .filter(
+                    (obj, index) =>
+                        this.scores.findIndex(
+                            (item) => item.floor === obj.floor
+                        ) === index
+                )
+                .map((e) => {
+                    return e.floor === 1
+                        ? "1st Floor"
+                        : e.floor === 2
+                        ? "2nd Floor"
+                        : "4th Floor";
+                });
+            this.floors.push("Remaining");
         });
     },
     computed: {
-        totoalCalc: () => (scores) => {
+        totalCalc: () => (scores) => {
             if (scores) {
                 return scores.reduce(
                     (accumulator, currentValue) =>
@@ -114,6 +141,16 @@ export default {
                 );
             }
             return 0;
+        },
+        chartDataCalc: () => (scores, remain) => {
+            if (scores) {
+                const overall = scores.map((e) => {
+                    return e.used;
+                });
+                overall.push(remain);
+                return overall;
+            }
+            return [0, 0, 0, 0];
         },
     },
 };
