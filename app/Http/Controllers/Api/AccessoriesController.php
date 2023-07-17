@@ -50,11 +50,11 @@ class AccessoriesController extends BaseController
             $accessory->image = base64_encode($file);
             $total = 0;
             $used = 0;
-            $lists = $accessory->accessory_lists->where("team_id", $team->id);
+            $lists = $accessory->accessory_lists->where("floor", $team->floor);
             foreach ($lists as $list) {
                 $total = $total + $list->quantity;
             };
-            foreach ($accessory->records as $record) {
+            foreach ($accessory->records->where('floor', Auth::user()->user_info->team->floor) as $record) {
                 $used = $used + $record->count;
             };
             $accessory->total = $total;

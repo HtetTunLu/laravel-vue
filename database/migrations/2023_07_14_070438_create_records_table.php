@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("accessory_id");
             $table->integer('count');
+            $table->integer('floor');
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')

@@ -20,6 +20,7 @@ class RecordResource extends JsonResource
             'user_id' => $this->user->id,
             'accessory_id' => $this->accessory->id,
             'count' => $this->count,
+            'floor' => $this->floor,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

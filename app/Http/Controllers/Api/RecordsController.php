@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\RecordResource;
+use App\Models\Accessory;
+use App\Models\AccessoryList;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +35,23 @@ class RecordsController extends BaseController
         if ($validator->fails()) {
             return $this->sendError('Not valid inputs', $validator->errors());
         }
-        $input['user_id']= Auth::user()->id;
+        $lists = AccessoryList::where('accessory_id', $request->accessory_id)
+            ->where('floor', Auth::user()->user_info->team->floor)->get();
+        $records = Record::where('accessory_id', $request->accessory_id)
+            ->where('floor', Auth::user()->user_info->team->floor)->get();
+        $total = 0;
+        $used = 0;
+        foreach ($lists as $list) {
+            $total = $total + $list->quantity;
+        };
+        foreach ($records as $record) {
+            $used = $used + $record->count;
+        };
+        if ($total - $used < $request->count) {
+            return $this->sendError("Can't use this amout", $validator->errors());
+        }
+        $input['user_id'] = Auth::user()->id;
+        $input['floor'] = Auth::user()->user_info->team->floor;
         $record = Record::create($input);
 
         return $this->sendResponse(new RecordResource($record), 'Record created successfully.');

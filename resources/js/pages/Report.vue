@@ -31,9 +31,14 @@
                             Remaining: {{ accessory.total - accessory.used }}
                         </p>
                         <p class="text">Team: {{ accessory.team.name }}</p>
+                        <p class="text">Floor: {{ accessory.team.floor }}</p>
                     </div>
                     <div class="card-footer">
-                        <button class="btn" @click="report(accessory)">
+                        <button
+                            :class="`btn ${btnClass(accessory.total)}`"
+                            :disabled="isDisable(accessory.total)"
+                            @click="report(accessory)"
+                        >
                             Report
                         </button>
                     </div>
@@ -92,6 +97,14 @@ export default {
                 });
             });
         },
+    },
+    computed: {
+        isDisable: () => (total) => {
+            return total === 0;
+        },
+        btnClass: () => (total) => {
+            return total === 0 ? "disabled" : ""
+        }
     },
 };
 </script>
@@ -194,5 +207,8 @@ export default {
 .text {
     margin-top: 10px;
     color: #888888;
+}
+.disabled {
+    cursor: not-allowed;
 }
 </style>
