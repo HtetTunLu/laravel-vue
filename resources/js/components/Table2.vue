@@ -2,34 +2,53 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr v-if="users">
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Employee Id</th>
-                    <th>Team</th>
-                    <th>Entry Date</th>
-                    <th>Actions</th>
-                </tr>
-                <tr v-else>
-                    <th>Id</th>
-                    <th>Accessory</th>
-                    <th>Floor</th>
-                    <th>Quantity</th>
-                    <th>Remind Limit</th>
-                    <th>Added Date</th>
-                    <th>Actions</th>
+                <tr>
+                    <th v-for="head in headers" :key="head">{{ head }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="param in params" :key="param.id">
                     <td>{{ param.id }}</td>
-                    <td>{{ users ? param.name : param.accessory_name }}</td>
-                    <td>{{ users ? param.email : param.floor }}</td>
-                    <td>{{ users ? param.employee_id : param.quantity }}</td>
-                    <td>{{ users ? param.team : param.remind_limit }}</td>
-                    <td>{{ users ? param.entry_date : param.created_at }}</td>
                     <td>
+                        {{
+                            users
+                                ? param.name
+                                : lists
+                                ? param.accessory_name
+                                : param.user.name
+                        }}
+                    </td>
+                    <td>
+                        {{
+                            users
+                                ? param.email
+                                : lists
+                                ? param.floor
+                                : param.accessory.name
+                        }}
+                    </td>
+                    <td>
+                        {{
+                            users
+                                ? param.employee_id
+                                : lists
+                                ? param.quantity
+                                : param.count
+                        }}
+                    </td>
+                    <td>
+                        {{
+                            users
+                                ? param.team
+                                : lists
+                                ? param.remind_limit
+                                : param.floor
+                        }}
+                    </td>
+                    <td>
+                        {{ users ? param.entry_date : param.created_at }}
+                    </td>
+                    <td v-if="!records">
                         <button @click="$emit('on-edit', param.id)">
                             Edit
                         </button>
@@ -52,14 +71,47 @@
 <script>
 export default {
     name: "Table2",
-    props: ["users", "lists"],
+    props: ["users", "lists", "records"],
     data: () => {
         return {
             params: null,
+            headers: [],
         };
     },
     updated() {
-        this.params = this.users ? this.users : this.lists;
+        if (this.users) {
+            this.headers = [
+                "Id",
+                "Name",
+                "Email",
+                "Employee Id",
+                "Team",
+                "Entry Date",
+                "Actions",
+            ];
+            this.params = this.users;
+        } else if (this.lists) {
+            this.headers = [
+                "Id",
+                "Accessory",
+                "Floor",
+                "Quantity",
+                "Remind Limit",
+                "Added Date",
+                "Actions",
+            ];
+            this.params = this.lists;
+        } else {
+            this.headers = [
+                "Id",
+                "User",
+                "Accessory",
+                "Count",
+                "Floor",
+                "Used Date",
+            ];
+            this.params = this.records;
+        }
     },
 };
 </script>

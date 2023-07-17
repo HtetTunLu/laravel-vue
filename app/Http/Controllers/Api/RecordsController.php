@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\RecordResource;
-use App\Models\Accessory;
 use App\Models\AccessoryList;
 use App\Models\Record;
 use Illuminate\Http\Request;
@@ -16,9 +15,20 @@ class RecordsController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $per_page = 5;
+        $start_index = ($request->search * $per_page) - 5;
+        $end_index = $request->search * $per_page;
+        $records = Record::all();
+        $search_users = $records->filter(function ($name, $key) use ($start_index, $end_index) {
+            if ($key >= $start_index && $key < $end_index) {
+                return $name;
+            }
+        });
+        $result = RecordResource::collection($search_users);
+        $custom = [$records->count() > $request->search * 5, $records->count()];
+        return $this->sendCustomResponse($result, $custom, 'Records retrieved successfully.');
     }
 
     /**

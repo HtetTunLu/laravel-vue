@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Dashboard from "./pages/Dashboard.vue";
 import Report from "./pages/Report.vue";
+import Record from "./pages/Record.vue";
 import Accessories from "./pages/accessories/index.vue";
 import AccessoryCreate from "./pages/accessories/create.vue";
 import AccessoryEdit from "./pages/accessories/_id/edit.vue";
@@ -35,6 +36,11 @@ const routes = [
         path: "/report",
         name: "Report",
         component: Report,
+    },
+    {
+        path: "/record",
+        name: "Record",
+        component: Record,
     },
     {
         path: "/accessories",

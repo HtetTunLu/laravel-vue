@@ -17,8 +17,8 @@ class RecordResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user->id,
-            'accessory_id' => $this->accessory->id,
+            'user' => $this->user,
+            'accessory' => $this->accessory,
             'count' => $this->count,
             'floor' => $this->floor,
             'created_at' => $this->created_at->format('d/m/Y'),

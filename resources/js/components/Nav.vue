@@ -14,6 +14,7 @@
         <a @click="goTo('Users')" v-if="managerPermit || adminPermit">Users</a>
         <a @click="goTo('Teams')" v-if="adminPermit">Teams</a>
         <a @click="goTo('Report')" v-if="userPermit || managerPermit">Report</a>
+        <a @click="goTo('Record')" v-if="adminPermit">Records</a>
     </div>
 </template>
 
@@ -30,13 +31,22 @@ export default {
     },
     computed: {
         adminPermit() {
-            return this.$store.state.user.role === 1;
+            if (this.$store.state.user) {
+                return this.$store.state.user.role === 1;
+            }
+            return false;
         },
         managerPermit() {
-            return this.$store.state.user.role === 2;
+            if (this.$store.state.user) {
+                return this.$store.state.user.role === 2;
+            }
+            return false;
         },
         userPermit() {
-            return this.$store.state.user.role === 3;
+            if (this.$store.state.user) {
+                return this.$store.state.user.role === 3;
+            }
+            return false;
         },
     },
     methods: {
