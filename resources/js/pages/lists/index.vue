@@ -9,11 +9,11 @@
             </div>
             <div class="sub-container">
                 <button class="csv-btn" @click="csvDownload">Download</button>
-                <input
+                <!-- <input
                     type="file"
                     class="custom-file-input"
                     @change="uploadCsv"
-                />
+                /> -->
                 <button class="btn" @click="onCreate">New</button>
             </div>
             <Table2
@@ -107,7 +107,12 @@ export default {
                 .then((response) => {
                     this.lists = response.data.data.map((e) => {
                         e.accessory_name = e.accessory.name;
-                        e.team_name = e.team.name;
+                        e.floor =
+                            e.floor === 1
+                                ? "First Floor"
+                                : e.floor === 2
+                                ? "Second Floor"
+                                : "Third Floor";
                         return e;
                     });
                     if (response.data.is_next[1] >= 6) {

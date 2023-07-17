@@ -14,7 +14,7 @@
                 <tr v-else>
                     <th>Id</th>
                     <th>Accessory</th>
-                    <th>Team</th>
+                    <th>Floor</th>
                     <th>Quantity</th>
                     <th>Remind Limit</th>
                     <th>Added Date</th>
@@ -25,7 +25,7 @@
                 <tr v-for="param in params" :key="param.id">
                     <td>{{ param.id }}</td>
                     <td>{{ users ? param.name : param.accessory_name }}</td>
-                    <td>{{ users ? param.email : param.team_name }}</td>
+                    <td>{{ users ? param.email : param.floor }}</td>
                     <td>{{ users ? param.employee_id : param.quantity }}</td>
                     <td>{{ users ? param.team : param.remind_limit }}</td>
                     <td>{{ users ? param.entry_date : param.created_at }}</td>

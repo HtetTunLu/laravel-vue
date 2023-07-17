@@ -38,7 +38,7 @@ class AccessoryListsController extends BaseController
 
         $validator = Validator::make($input, [
             'accessory_id' => 'required',
-            'team_id' => 'required',
+            'floor' => 'required',
             'quantity' => 'required',
             'remind_limit' => 'required',
         ]);
@@ -72,7 +72,7 @@ class AccessoryListsController extends BaseController
         $input = $request->all();
         $validator = Validator::make($input, [
             'accessory_id' => 'required',
-            'team_id' => 'required',
+            'floor' => 'required',
             'quantity' => 'required',
             'remind_limit' => 'required',
         ]);
@@ -81,7 +81,7 @@ class AccessoryListsController extends BaseController
             return $this->sendError('Not valid inputs', $validator->errors());
         }
         $accessoryList->accessory_id = $request->accessory_id;
-        $accessoryList->team_id = $request->team_id;
+        $accessoryList->floor = $request->floor;
         $accessoryList->quantity = $request->quantity;
         $accessoryList->remind_limit = $request->remind_limit;
         $accessoryList->save();

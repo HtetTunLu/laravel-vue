@@ -17,7 +17,7 @@ class AccessoryListResource extends JsonResource
         return [
             'id' => $this->id,
             'accessory' => $this->accessory,
-            'team' => $this->team,
+            'floor' => $this->floor,
             'quantity' => $this->quantity,
             'remind_limit' => $this->remind_limit,
             'created_at' => $this->created_at->format('d/m/Y'),

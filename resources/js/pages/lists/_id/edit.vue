@@ -23,15 +23,12 @@
                     </select>
                 </div>
                 <div class="form-control">
-                    <label for="accessory">Team</label>
-                    <select class="select" v-model="selectedTeam">
-                        <option
-                            v-for="option in teams"
-                            :key="option.id"
-                            :value="option.id"
-                        >
-                            {{ option.name }}
-                        </option>
+                    <label for="accessory">Floor</label>
+                    <select name="cars" class="select floor" v-model="floor">
+                        <option disabled selected value>select floor</option>
+                        <option value="1">First</option>
+                        <option value="2">Second</option>
+                        <option value="4">Fourth</option>
                     </select>
                 </div>
                 <div class="form-control">
@@ -44,7 +41,7 @@
                     />
                 </div>
                 <div class="form-control">
-                    <label for="remind">Remind Limit</label>
+                    <label for="remind" class="remind">Remind Limit</label>
                     <input
                         type="number"
                         name="remind"
@@ -75,7 +72,7 @@ export default {
     data: () => {
         return {
             selectedAcc: 0,
-            selectedTeam: 0,
+            floor: "",
             accessories: [],
             teams: [],
             quantity: null,
@@ -94,7 +91,7 @@ export default {
             )
             .then((response) => {
                 this.selectedAcc = response.data.data.accessory.id;
-                this.selectedTeam = response.data.data.team.id;
+                this.floor = response.data.data.floor;
                 this.quantity = response.data.data.quantity;
                 this.remind = response.data.data.remind_limit;
             });
@@ -125,7 +122,7 @@ export default {
         save() {
             const formData = new FormData();
             formData.append("accessory_id", this.selectedAcc);
-            formData.append("team_id", this.selectedTeam);
+            formData.append("floor", this.floor);
             formData.append("quantity", this.quantity);
             formData.append("remind_limit", this.remind);
             formData.append("_method", "PATCH");
@@ -284,5 +281,11 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
+}
+.floor {
+    margin-left: 6%;
+}
+.form-control .remind {
+    margin-right: 8%;
 }
 </style>

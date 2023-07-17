@@ -17,9 +17,4 @@ class Team extends Model
     {
         return $this->hasOne(UserInfo::class);
     }
-
-    public function accessory_list()
-    {
-        return $this->hasOne(AccessoryList::class);
-    }
 }
