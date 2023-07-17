@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Http\Resources\RecordResource;
+use App\Models\Accessory;
 use App\Models\AccessoryList;
 use App\Models\Record;
 use Illuminate\Http\Request;
@@ -29,6 +30,35 @@ class RecordsController extends BaseController
         $result = RecordResource::collection($search_users);
         $custom = [$records->count() > $request->search * 5, $records->count()];
         return $this->sendCustomResponse($result, $custom, 'Records retrieved successfully.');
+    }
+
+    public function overall()
+    {
+        $overall = [];
+        $floors = [1, 2, 4];
+        foreach ($floors as $floor) {
+            $accessories = Accessory::all();
+            foreach ($accessories as $accessory) {
+                $lists = AccessoryList::where('floor', $floor)->where('accessory_id', $accessory->id)->get();
+                $total = collect($lists)
+                    ->reduce(function ($carry, $item) {
+                        return $carry + $item["quantity"];
+                    }, 0);
+
+                $records = Record::where('floor', $floor)->where('accessory_id', $accessory->id)->get();
+                $used = collect($records)
+                    ->reduce(function ($carry, $item) {
+                        return $carry + $item["count"];
+                    }, 0);
+                $hahaha = new \StdClass();
+                $hahaha->accessory = $accessory->name;
+                $hahaha->floor = $floor;
+                $hahaha->total = $total;
+                $hahaha->used = $used;
+                array_push($overall, $hahaha);
+            }
+        }
+        return $this->sendResponse($overall, 'Record created successfully.');
     }
 
     /**

@@ -38,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('csv_download', [UsersController::class, "csv_download"]);
     Route::post('csv_upload', [UsersController::class, "csv_upload"]);
     Route::get('accessory_infos', [AccessoriesController::class, "get_infos"]);
+    Route::get('overall', [RecordsController::class, 'overall']);
 });

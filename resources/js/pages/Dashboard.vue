@@ -5,54 +5,49 @@
             <div class="container">
                 <p>Overall Records Dashboard</p>
             </div>
-            <div class="used">
-                <h3>Records Analysis for Accessory One</h3>
+            <div class="used" v-for="card in cards" :key="card">
+                <h3>Records Analysis for {{ card.name }}</h3>
                 <div class="overall">
-                    <doughnut class="doughnut" :id="1" />
+                    <doughnut class="doughnut" :id="card.name" />
                     <div class="analysis">
-                        <h3>Overall Analysis</h3>
+                        <h3>Each Floor Overall Analysis</h3>
                         <div>
                             <table>
                                 <tr>
-                                    <th>Team</th>
+                                    <th>Floor</th>
                                     <th>Total</th>
                                     <th>Used</th>
                                     <th>Remaining</th>
                                 </tr>
-                                <tr v-for="team in teams" :key="team.id">
-                                    <td class="team-name">{{ team.name }}</td>
-                                    <td>10</td>
-                                    <td>5</td>
-                                    <td>5</td>
+                                <tr v-for="score in card.scores" :key="score">
+                                    <td>{{ score.floor }}</td>
+                                    <td>{{ score.total }}</td>
+                                    <td>{{ score.used }}</td>
+                                    <td>{{ score.total - score.used }}</td>
                                 </tr>
                             </table>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="used">
-                <h3>Records Analysis for Accessory One</h3>
-                <div class="overall overall-two">
-                    <div class="analysis analysis-two">
-                        <h3>Overall Analysis</h3>
+                        <h3>All Floors Overall Analysis</h3>
                         <div>
                             <table>
                                 <tr>
-                                    <th>Team</th>
                                     <th>Total</th>
                                     <th>Used</th>
                                     <th>Remaining</th>
                                 </tr>
                                 <tr>
-                                    <td class="team-name">Team name</td>
-                                    <td>10</td>
-                                    <td>5</td>
-                                    <td>5</td>
+                                    <td>{{ totoalCalc(card.scores) }}</td>
+                                    <td>{{ usedCalc(card.scores) }}</td>
+                                    <td>
+                                        {{
+                                            totoalCalc(card.scores) -
+                                            usedCalc(card.scores)
+                                        }}
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
-                    <doughnut class="doughnut" :id="2" />
                 </div>
             </div>
         </div>
@@ -61,6 +56,7 @@
 <script>
 import Nav from "../components/Nav.vue";
 import Doughnut from "../components/charts/Doughnut.vue";
+import axios from "axios";
 
 export default {
     name: "Dashboard",
@@ -70,7 +66,8 @@ export default {
     },
     data: () => {
         return {
-            teams: [],
+            scores: [],
+            cards: [],
         };
     },
     created() {
@@ -79,9 +76,45 @@ export default {
             Accept: "application/json",
             Authorization: `Bearer ${accessToken}`,
         };
-        axios.get("/api/get_teams").then((response) => {
-            this.teams = response.data.data;
+        axios.get("/api/overall").then((response) => {
+            this.scores = response.data.data;
+            this.cards = this.scores
+                .filter(
+                    (obj, index) =>
+                        this.scores.findIndex(
+                            (item) => item.accessory === obj.accessory
+                        ) === index
+                )
+                .map((e) => {
+                    e.name = e.accessory;
+                    e.scores = this.scores.filter((score) => {
+                        return score.accessory === e.accessory;
+                    });
+                    return e;
+                });
         });
+    },
+    computed: {
+        totoalCalc: () => (scores) => {
+            if (scores) {
+                return scores.reduce(
+                    (accumulator, currentValue) =>
+                        accumulator + currentValue.total,
+                    0
+                );
+            }
+            return 0;
+        },
+        usedCalc: () => (scores) => {
+            if (scores) {
+                return scores.reduce(
+                    (accumulator, currentValue) =>
+                        accumulator + currentValue.used,
+                    0
+                );
+            }
+            return 0;
+        },
     },
 };
 </script>
@@ -120,9 +153,7 @@ h3 {
 }
 
 .overall {
-    margin-top: 50px;
     padding-left: 7%;
-    padding-bottom: 50px;
     display: flex;
     flex-wrap: nowrap;
     border-radius: 10px;
