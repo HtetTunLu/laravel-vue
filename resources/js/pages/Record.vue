@@ -10,6 +10,7 @@
                 <button id="printButton" class="btn" @click="print">
                     Print PDF
                 </button>
+                <button @click="sendNoti">send noti</button>
             </div>
 
             <Table2 :records="records" id="printTable" />
@@ -69,7 +70,6 @@ export default {
         print() {
             window.jsPDF = window.jspdf.jsPDF;
             var docPDF = new jsPDF();
-            // function print() {
             var elementHTML = document.querySelector("#printTable");
             docPDF.html(elementHTML, {
                 callback: function (docPDF) {
@@ -80,7 +80,12 @@ export default {
                 width: 170,
                 windowWidth: 650,
             });
-            // }
+        },
+        sendNoti() {
+            const formData = new FormData();
+            formData.append("title", "ha");
+            formData.append("body", "soe nay p");
+            axios.post("api/send-notification", formData);
         },
     },
 };

@@ -10,6 +10,7 @@ use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SendPushNotification;
 
 class RecordsController extends BaseController
 {

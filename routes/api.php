@@ -8,6 +8,7 @@ use App\Http\Controllers\API\RecordsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\NotiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('csv_upload', [UsersController::class, "csv_upload"]);
     Route::get('accessory_infos', [AccessoriesController::class, "get_infos"]);
     Route::get('overall', [RecordsController::class, 'overall']);
+    Route::patch('fcm-token', [NotiController::class, 'updateToken'])->name('fcmToken');
+    Route::post('send-notification',[NotiController::class,'notification'])->name('notification');
 });
