@@ -6,7 +6,13 @@
             <div class="container">
                 <p class="typed">Used Accessories Record</p>
             </div>
-            <Table2 :records="records" />
+            <div class="btn-container">
+                <button id="printButton" class="btn" @click="print">
+                    Print PDF
+                </button>
+            </div>
+
+            <Table2 :records="records" id="printTable" />
             <paginate
                 v-if="isPaginate"
                 :total="total_page"
@@ -60,6 +66,22 @@ export default {
                 }
             });
         },
+        print() {
+            window.jsPDF = window.jspdf.jsPDF;
+            var docPDF = new jsPDF();
+            // function print() {
+            var elementHTML = document.querySelector("#printTable");
+            docPDF.html(elementHTML, {
+                callback: function (docPDF) {
+                    docPDF.save("HTML Linuxhint web page.pdf");
+                },
+                x: 15,
+                y: 15,
+                width: 170,
+                windowWidth: 650,
+            });
+            // }
+        },
     },
 };
 </script>
@@ -95,6 +117,32 @@ export default {
     width: 0;
     animation: typing 2.5s steps(700, end) forwards, blinking 0.2s infinite;
     animation-iteration-count: infinite;
+}
+
+.btn-container {
+    text-align: right;
+}
+.btn {
+    background: rgb(157, 187, 165);
+    background: linear-gradient(
+        90deg,
+        rgba(157, 187, 165, 1) 0%,
+        #95a5a6 45%,
+        rgba(221, 226, 219, 1) 100%
+    );
+    border-radius: 10px;
+    border: 1px solid white;
+    width: 100px;
+    cursor: pointer;
+    margin-top: 10px;
+    height: 33px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+.btn:hover {
+    opacity: 0.5;
+    color: black;
 }
 
 @keyframes typing {
