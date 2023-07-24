@@ -7,6 +7,7 @@ use App\Http\Resources\RecordResource;
 use App\Models\Accessory;
 use App\Models\AccessoryList;
 use App\Models\Record;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -90,6 +91,48 @@ class RecordsController extends BaseController
         };
         if ($total - $used < $request->count) {
             return $this->sendError("Can't use this amout", $validator->errors());
+        }
+        if ($total - $used - $request->count <= $lists->last()->remind_limit) {
+            $url = 'https://fcm.googleapis.com/fcm/send';
+            $FcmToken = User::whereNotNull('fcm_token')->pluck('fcm_token')->all();
+
+            $serverKey = env('FIREBASE_SERVER_KEY');
+            $access = Accessory::find($request->accessory_id);
+            $flr = Auth::user()->user_info->team->floor;
+            $data = [
+                "registration_ids" => $FcmToken,
+                "notification" => [
+                    "title" => "Accessory Remind Lmiit",
+                    "body" => "$flr floor mhr $access->name remind limit kyaw nay p",
+                    "link" => "http://localhost:8000"
+                ]
+            ];
+            $encodedData = json_encode($data);
+
+            $headers = [
+                'Authorization:key=' . $serverKey,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            // Disabling SSL Certificate support temporarly
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedData);
+            // Execute post
+            $result = curl_exec($ch);
+            if ($result === FALSE) {
+                die('Curl failed: ' . curl_error($ch));
+            }
+            // Close connection
+            curl_close($ch);
+
         }
         $input['user_id'] = Auth::user()->id;
         $input['floor'] = Auth::user()->user_info->team->floor;

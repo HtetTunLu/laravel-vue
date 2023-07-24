@@ -70,8 +70,6 @@ class NotiController extends Controller
         }
         // Close connection
         curl_close($ch);
-        // FCM response
-        // dd($result);
     }
 
     /**

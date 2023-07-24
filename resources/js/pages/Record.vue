@@ -73,7 +73,7 @@ export default {
             var elementHTML = document.querySelector("#printTable");
             docPDF.html(elementHTML, {
                 callback: function (docPDF) {
-                    docPDF.save("HTML Linuxhint web page.pdf");
+                    docPDF.save("Records.pdf");
                 },
                 x: 15,
                 y: 15,
