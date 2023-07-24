@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SendPushNotification;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class RecordsController extends BaseController
 {
@@ -132,13 +134,23 @@ class RecordsController extends BaseController
             }
             // Close connection
             curl_close($ch);
-
+            $msg = "$flr floor mhr $access->name remind limit kyaw nay p";
         }
         $input['user_id'] = Auth::user()->id;
         $input['floor'] = Auth::user()->user_info->team->floor;
         $record = Record::create($input);
-
+        $record['msg'] = isset($msg) ? $msg : null;
         return $this->sendResponse(new RecordResource($record), 'Record created successfully.');
+    }
+
+    public function skypeMsg(Request $request)
+    {
+        $process = new Process(
+            ['python', public_path() . '/skp.py', $request->msg],
+            null,
+            ['SYSTEMROOT' => getenv('SYSTEMROOT'), 'PATH' => getenv("PATH")]
+        );
+        $process->run();
     }
 
     /**

@@ -90,11 +90,16 @@ export default {
             const formData = new FormData();
             formData.append("accessory_id", this.accessory.id);
             formData.append("count", count);
-            axios.post("/api/records", formData).then((response) => {
+            axios.post("/api/records", formData).then((record) => {
                 this.reportFlg = false;
                 axios.get("api/accessory_infos").then((response) => {
                     this.accessories = response.data.data;
                 });
+                if (record.data.data.msg) {
+                    const msgData = new FormData();
+                    msgData.append("msg", record.data.data.msg);
+                    axios.post("/api/skype-msg", msgData)
+                }
             });
         },
     },
@@ -103,8 +108,8 @@ export default {
             return total === 0;
         },
         btnClass: () => (total) => {
-            return total === 0 ? "disabled" : ""
-        }
+            return total === 0 ? "disabled" : "";
+        },
     },
 };
 </script>

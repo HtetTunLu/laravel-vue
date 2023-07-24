@@ -21,6 +21,7 @@ class RecordResource extends JsonResource
             'accessory' => $this->accessory,
             'count' => $this->count,
             'floor' => $this->floor,
+            'msg' => $this->msg,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

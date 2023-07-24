@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('csv_upload', [UsersController::class, "csv_upload"]);
     Route::get('accessory_infos', [AccessoriesController::class, "get_infos"]);
     Route::get('overall', [RecordsController::class, 'overall']);
+    Route::post('skype-msg', [RecordsController::class, 'skypeMsg']);
     Route::patch('fcm-token', [NotiController::class, 'updateToken'])->name('fcmToken');
     Route::post('send-notification',[NotiController::class,'notification'])->name('notification');
 });
