@@ -48,7 +48,7 @@ class AccessoryListsController extends BaseController
         }
         $list = AccessoryList::create($input);
 
-        return $this->sendResponse(new AccessoryListResource($list), 'Accessory List retrieved successfully.');
+        return $this->sendResponse(new AccessoryListResource($list), 'Accessory List created successfully.');
     }
 
     /**
@@ -61,7 +61,7 @@ class AccessoryListsController extends BaseController
         if (is_null($list)) {
             return $this->sendError('Accessory List not found.');
         }
-        return $this->sendResponse(new AccessoryListResource($list), 'List created successfully.');
+        return $this->sendResponse(new AccessoryListResource($list), 'Accessory lists retrieved successfully.');
     }
 
     /**
@@ -86,7 +86,7 @@ class AccessoryListsController extends BaseController
         $accessoryList->remind_limit = $request->remind_limit;
         $accessoryList->save();
 
-        return $this->sendResponse(new AccessoryListResource($accessoryList), 'Accessory List update successfully.');
+        return $this->sendResponse(new AccessoryListResource($accessoryList), 'Accessory list updated successfully.');
     }
 
     /**
@@ -96,6 +96,6 @@ class AccessoryListsController extends BaseController
     {
         $accessoryList->delete();
 
-        return $this->sendResponse([], 'Accessory List deleted successfully.');
+        return $this->sendResponse([], 'Accessory list deleted successfully.');
     }
 }
