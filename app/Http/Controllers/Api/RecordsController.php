@@ -54,12 +54,12 @@ class RecordsController extends BaseController
                     ->reduce(function ($carry, $item) {
                         return $carry + $item["count"];
                     }, 0);
-                $hahaha = new \StdClass();
-                $hahaha->accessory = $accessory->name;
-                $hahaha->floor = $floor;
-                $hahaha->total = $total;
-                $hahaha->used = $used;
-                array_push($overall, $hahaha);
+                $obj = new \StdClass();
+                $obj->accessory = $accessory->name;
+                $obj->floor = $floor;
+                $obj->total = $total;
+                $obj->used = $used;
+                array_push($overall, $obj);
             }
         }
         return $this->sendResponse($overall, 'Record created successfully.');

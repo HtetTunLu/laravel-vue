@@ -28,7 +28,7 @@ class AccessoriesController extends BaseController
             $file = (string) File::get($path);
             $accessory->image = base64_encode($file);
         }
-        return $this->sendResponse(AccessoryResource::collection($accessories), 'Post retrieved successfully.');
+        return $this->sendResponse(AccessoryResource::collection($accessories), 'Accessories retrieved successfully.');
     }
 
     public function get_accessories()
@@ -90,7 +90,7 @@ class AccessoriesController extends BaseController
         $input['image'] = $generated_new_name;
         $post = Accessory::create($input);
 
-        return $this->sendResponse(new AccessoryResource($post), 'Post created successfully.');
+        return $this->sendResponse(new AccessoryResource($post), 'Accessory created successfully.');
     }
 
     /**
@@ -113,7 +113,7 @@ class AccessoriesController extends BaseController
         $file = (string) File::get($path);
         $accessory->image = base64_encode($file);
 
-        return $this->sendResponse(new AccessoryResource($accessory), 'Post retrieved successfully.');
+        return $this->sendResponse(new AccessoryResource($accessory), 'Accessory retrieved successfully.');
     }
 
     /**
