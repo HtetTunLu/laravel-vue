@@ -2,8 +2,8 @@ import fbchat
 from fbchat import Client
 from fbchat.models import *
 
-username = "leonartex15898@gmail.com"
-password = "HtetArtex385"
+username = "example@gmail.com"
+password = "Password"
 # from getpass import getpass
 # usernmae = "leonartex15898@gmail.com"
 # client = fbchat.Client(usernmae, getpass())
